@@ -1,6 +1,7 @@
 //import model
 const users = require("../models/userModel")
-
+const bcrypt = require("bcrypt")
+const saltRounds = 10
 //register
 exports.registerController = async(req,res)=>{
     const {username,email,password} = req.body
@@ -8,15 +9,16 @@ exports.registerController = async(req,res)=>{
         const existingUser = await users.findOne({$or:[{email},{username}]})
         if(existingUser){
             if(existingUser.email == email){
-                res.status(400).json("Already Registered User...")
+                return res.status(400).json("Already Registered User...")
             }
             if(existingUser.username == username){
-                res.status(400).json("Username already taken!")
+                return res.status(400).json("Username already taken!")
             }
         }
         else{
+            const hashedPassword = await bcrypt.hash(password, saltRounds)
             const newUser = new users({
-                username,email,password
+                username,email,password:hashedPassword
             })
             await newUser.save()
             res.status(200).json(newUser)
@@ -35,11 +37,12 @@ exports.loginController = async(req,res) => {
     try{
         const existingUser = await users.findOne({username})
         if(existingUser){
-            if(existingUser.password==password){
-                res.status(200).json(existingUser)
+            const match = await bcrypt.compare(password,existingUser.password)
+            if(match){
+                return res.status(200).json(existingUser)
             }
             else{
-                res.status(401).json("Password Does not Match!")
+                return res.status(401).json("Password Does not Match!")
             }
         }
         else{
