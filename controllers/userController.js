@@ -41,7 +41,8 @@ exports.loginController = async (req, res) => {
         if (existingUser) {
             const match = await bcrypt.compare(password, existingUser.password)
             if (match) {
-                return res.status(200).json(existingUser)
+                const token = jwt.sign({ userMail: existingUser.email }, process.env.secretkey)
+                return res.status(200).json({existingUser,token})
             }
             else {
                 return res.status(401).json("Password Does not Match!")
@@ -64,7 +65,7 @@ exports.googleLoginController = async (req, res) => {
     try {
         const existingUser = await users.findOne({ email })
         if (existingUser) {
-            const token = jwt.sign({ userMail: existingUser.email }, "secretkey")
+            const token = jwt.sign({ userMail: existingUser.email }, process.env.secretkey)
             res.status(200).json({ existingUser, token })
         }
         else {
@@ -72,7 +73,7 @@ exports.googleLoginController = async (req, res) => {
                 username, email, password:hashedPassword, profile:photo
             })
             await newUser.save()
-            const token = jwt.sign({ userMail: newUser.email }, "secretkey")
+            const token = jwt.sign({ userMail: newUser.email }, process.env.secretkey)
             res.status(200).json({existingUser:newUser,token})
         }
     } catch (err) {
