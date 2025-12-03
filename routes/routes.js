@@ -29,6 +29,9 @@ route.get("/recent-home",showController.getRecentShowController)
 //get popular shows
 route.get("/popular-home",showController.getPopularShowController)
 
+// get a show
+route.get("/details/:id",showController.getAShowController)
+
 // ..............................ADMIN..............................
 
 //add shows

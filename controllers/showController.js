@@ -64,3 +64,17 @@ exports.getPopularShowController = async(req,res) => {
         res.status(500).json(err)
     }
 }
+
+exports.getAShowController = async(req,res) => {
+    const {id} = req.params
+    console.log(id);
+    
+
+    try{
+        const show = await shows.findOne({_id:id})
+        res.status(200).json(show)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
