@@ -54,3 +54,13 @@ exports.getRecentShowController = async(req,res) => {
         res.status(500).json(err)
     }
 }
+
+exports.getPopularShowController = async(req,res) => {
+    try{
+        const PopularShows = await shows.find().sort({score:-1}).limit(6)
+        res.status(200).json(PopularShows)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}

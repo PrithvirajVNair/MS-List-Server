@@ -24,7 +24,10 @@ route.get("/search",showController.getShowController)
 // ........................USER.....................................
 
 //get recent shows
-route.get("/home",showController.getRecentShowController)
+route.get("/recent-home",showController.getRecentShowController)
+
+//get popular shows
+route.get("/popular-home",showController.getPopularShowController)
 
 // ..............................ADMIN..............................
 
