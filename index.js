@@ -25,7 +25,7 @@ mslistServer.use(route)
 PORT = 4000 || process.env.PORT
 
 mslistServer.listen(PORT,()=>{
-    console.log(`Server Running is ${PORT}`); 
+    console.log(`Server Running is ${PORT}`);
 })
 
 //used to check if there is any error in the server

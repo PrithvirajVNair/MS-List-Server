@@ -3,6 +3,8 @@ const express = require("express")
 
 //import controller
 const userController = require('../controllers/userController')
+const showController = require('../controllers/showController')
+const adminController = require('../controllers/adminController')
 
 //create instance for route
 const route = new express.Router()
@@ -15,5 +17,17 @@ route.post("/login",userController.loginController)
 
 //path to google login
 route.post("/google-login",userController.googleLoginController)
+
+//get shows
+route.get("/search",showController.getShowController)
+
+
+// ..............................ADMIN..............................
+
+//add shows
+route.post("/add-shows",showController.addShowController)
+
+// get users
+route.get("/get-users",adminController.getUserController)
 
 module.exports = route
