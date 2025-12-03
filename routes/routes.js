@@ -21,6 +21,10 @@ route.post("/google-login",userController.googleLoginController)
 //get shows
 route.get("/search",showController.getShowController)
 
+// ........................USER.....................................
+
+//get recent shows
+route.get("/home",showController.getRecentShowController)
 
 // ..............................ADMIN..............................
 

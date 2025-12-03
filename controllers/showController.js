@@ -44,3 +44,13 @@ exports.getShowController = async(req,res) => {
         res.status(500).json(err)
     }
 }
+
+exports.getRecentShowController = async(req,res) => {
+    try{
+        const RecentShows = await shows.find().sort({_id:-1}).limit(6)
+        res.status(200).json(RecentShows)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
