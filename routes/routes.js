@@ -21,6 +21,9 @@ route.post("/google-login",userController.googleLoginController)
 //get shows
 route.get("/search",showController.getShowController)
 
+// recommendation
+route.get("/recommendation/:id",showController.getSimilarShows)
+
 // ........................USER.....................................
 
 //get recent shows
@@ -31,6 +34,9 @@ route.get("/popular-home",showController.getPopularShowController)
 
 // get a show
 route.get("/details/:id",showController.getAShowController)
+
+// get category/language based shows
+route.get("/category/:categoryname",showController.getShowCategoryController)
 
 // ..............................ADMIN..............................
 
