@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     bio:{
         type:String,
         default:"User"
+    },
+    verifyed:{
+        type:Boolean,
+        default:false
     }
 })
 
