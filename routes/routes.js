@@ -40,4 +40,10 @@ route.post("/add-shows",showController.addShowController)
 // get users
 route.get("/get-users",adminController.getUserController)
 
+// delete users
+route.delete("/delete-user",adminController.deleteUserController)
+
+// delete show
+route.delete("/delete-show",adminController.deleteShowController)
+
 module.exports = route
