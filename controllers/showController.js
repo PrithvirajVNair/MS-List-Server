@@ -34,8 +34,15 @@ exports.addShowController = async (req, res) => {
 
 // get show controller
 exports.getShowController = async (req, res) => {
+    const searchData = req.query.search
+    console.log(searchData);
+    const query = {
+        title:{
+            $regex:searchData, $options:"i"
+        }
+    }
     try {
-        const allShows = await shows.find()
+        const allShows = await shows.find(query)
         const movieCount = await shows.countDocuments({ category: "Movie" })
         const seriesCount = await shows.countDocuments({ category: "Series" })
         res.status(200).json({ allShows, movieCount, seriesCount })
@@ -50,8 +57,14 @@ exports.getShowCategoryController = async (req,res) => {
     console.log(req.params);
     
     const {categoryname} = req.params
+    const searchData = req.query.search
+    const query = {
+        title:{
+            $regex:searchData, $options:"i"
+        }
+    }
     try{
-        const show = await shows.find({$or:[{language:{$regex:categoryname, $options:"i"}},{genre:{$regex:categoryname,$options:"i"}}]})
+        const show = await shows.find({$and:[query,{$or:[{language:{$regex:categoryname, $options:"i"}},{genre:{$regex:categoryname,$options:"i"}}]}]})
         res.status(200).json(show)
         console.log(categoryname);
         

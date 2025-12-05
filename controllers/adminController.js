@@ -14,9 +14,20 @@ exports.getUserController = async(req,res) => {
 
 exports.deleteUserController = async(req,res) => {
     const {id} = req.body
+    
     try{
         const deleteUser = await users.deleteOne({_id:id})
         res.status(200).json(deleteUser)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.getShowController = async(req,res) => {
+    try{
+        const AllShows = await shows.find()
+        res.status(200).json(AllShows)
     }
     catch(err){
         res.status(500).json(err)

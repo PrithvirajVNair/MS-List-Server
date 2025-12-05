@@ -43,6 +43,9 @@ route.get("/category/:categoryname",showController.getShowCategoryController)
 //add shows
 route.post("/add-shows",showController.addShowController)
 
+// get show
+route.get("/get-adminshows",adminController.getShowController)
+
 // get users
 route.get("/get-users",adminController.getUserController)
 
