@@ -1,4 +1,5 @@
 const lists = require("../models/listModel")
+const shows = require("../models/showModel")
 
 
 exports.addListController = async (req, res) => {
@@ -33,11 +34,181 @@ exports.getListController = async (req, res) => {
             $regex: searchData, $options: "i"
         }
     }
-    console.log(query);
+    // console.log(query)
 
     try {
         const listData = await lists.find({ $and: [query, { userMail: email }] })
         const count = await lists.countDocuments({ userMail: email })
+        res.status(200).json({ listData, count })
+
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.addFavListController = async(req,res) => {
+    const { _id, showid, title, rating, status, sDate, eDate, genre, imageUrl, userMail, favorite } = req.body
+    console.log( _id,showid, title, rating, status, sDate, eDate, genre, imageUrl, userMail, favorite);
+    
+    try{
+        const existingShow = await lists.findByIdAndUpdate(_id,{eDate, showid, title, rating, status, sDate, genre, imageUrl, userMail, favorite:true},{new:true})
+        res.status(200).json(existingShow)
+    }
+    catch(err){
+        res.status(200).json(err)
+    }
+}
+
+exports.removeFavListController = async(req,res) => {
+    const { _id, showid, title, rating, status, sDate, eDate, genre, imageUrl, userMail, favorite } = req.body
+    console.log( _id,showid, title, rating, status, sDate, eDate, genre, imageUrl, userMail, favorite);
+    
+    try{
+        const existingShow = await lists.findByIdAndUpdate(_id,{eDate, showid, title, rating, status, sDate, genre, imageUrl, userMail, favorite:false},{new:true})
+        res.status(200).json(existingShow)
+    }
+    catch(err){
+        res.status(200).json(err)
+    }
+}
+
+exports.getFavListController = async (req, res) => {
+    const email = req.payload
+    let searchData = req.query.search
+    if (!searchData || searchData === "undefined") {
+        searchData = "";
+    }
+    const query = {
+        title: {
+            $regex: searchData, $options: "i"
+        }
+    }
+    console.log(query);
+
+    try {
+        const listData = await lists.find({ $and: [query, { userMail: email, favorite:true }] })
+        const count = await lists.countDocuments({ userMail: email, favorite:true })
+        res.status(200).json({ listData, count })
+
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.getPlanningListController = async (req, res) => {
+    const email = req.payload
+    let searchData = req.query.search
+    if (!searchData || searchData === "undefined") {
+        searchData = "";
+    }
+    const query = {
+        title: {
+            $regex: searchData, $options: "i"
+        }
+    }
+    console.log(query);
+
+    try {
+        const listData = await lists.find({ $and: [query, { userMail: email, status:"planning" }] })
+        const count = await lists.countDocuments({ userMail: email, status:"planning" })
+        res.status(200).json({ listData, count })
+
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.getWatchingListController = async (req, res) => {
+    const email = req.payload
+    let searchData = req.query.search
+    if (!searchData || searchData === "undefined") {
+        searchData = "";
+    }
+    const query = {
+        title: {
+            $regex: searchData, $options: "i"
+        }
+    }
+    console.log(query);
+
+    try {
+        const listData = await lists.find({ $and: [query, { userMail: email, status:"watching" }] })
+        const count = await lists.countDocuments({ userMail: email, status:"watching" })
+        res.status(200).json({ listData, count })
+
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.getOnHoldListController = async (req, res) => {
+    const email = req.payload
+    let searchData = req.query.search
+    if (!searchData || searchData === "undefined") {
+        searchData = "";
+    }
+    const query = {
+        title: {
+            $regex: searchData, $options: "i"
+        }
+    }
+    console.log(query);
+
+    try {
+        const listData = await lists.find({ $and: [query, { userMail: email, status:"onhold" }] })
+        const count = await lists.countDocuments({ userMail: email, status:"onhold" })
+        res.status(200).json({ listData, count })
+
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.getCompletedListController = async (req, res) => {
+    const email = req.payload
+    let searchData = req.query.search
+    if (!searchData || searchData === "undefined") {
+        searchData = "";
+    }
+    const query = {
+        title: {
+            $regex: searchData, $options: "i"
+        }
+    }
+    console.log(query);
+
+    try {
+        const listData = await lists.find({ $and: [query, { userMail: email, status:"completed" }] })
+        const count = await lists.countDocuments({ userMail: email, status:"completed" })
+        res.status(200).json({ listData, count })
+
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.getDroppedListController = async (req, res) => {
+    const email = req.payload
+    let searchData = req.query.search
+    if (!searchData || searchData === "undefined") {
+        searchData = "";
+    }
+    const query = {
+        title: {
+            $regex: searchData, $options: "i"
+        }
+    }
+    console.log(query);
+
+    try {
+        const listData = await lists.find({ $and: [query, { userMail: email, status:"dropped" }] })
+        const count = await lists.countDocuments({ userMail: email, status:"dropped" })
         res.status(200).json({ listData, count })
 
     }

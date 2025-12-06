@@ -45,6 +45,30 @@ route.post("/add-to-list",jwtMiddleware,listController.addListController)
 // get list
 route.get("/get-list",jwtMiddleware,listController.getListController)
 
+// get fav list
+route.get("/get-fav-list",jwtMiddleware,listController.getFavListController)
+
+// add fav list
+route.put("/add-fav-list",jwtMiddleware,listController.addFavListController)
+
+// remove fav list
+route.put("/remove-fav-list",jwtMiddleware,listController.removeFavListController)
+
+// get planning list
+route.get("/get-planning-list",jwtMiddleware,listController.getPlanningListController)
+
+// get watching list
+route.get("/get-watching-list",jwtMiddleware,listController.getWatchingListController)
+
+// get onhold list
+route.get("/get-onhold-list",jwtMiddleware,listController.getOnHoldListController)
+
+// get completed list
+route.get("/get-completed-list",jwtMiddleware,listController.getCompletedListController)
+
+// get dropped list
+route.get("/get-dropped-list",jwtMiddleware,listController.getDroppedListController)
+
 // ..............................ADMIN..............................
 
 //add shows
