@@ -5,7 +5,8 @@ const express = require("express")
 const userController = require('../controllers/userController')
 const showController = require('../controllers/showController')
 const adminController = require('../controllers/adminController')
-
+const listController = require('../controllers/listController')
+const jwtMiddleware = require("../middleware/jwtMiddleware")
 //create instance for route
 const route = new express.Router()
 
@@ -37,6 +38,9 @@ route.get("/details/:id",showController.getAShowController)
 
 // get category/language based shows
 route.get("/category/:categoryname",showController.getShowCategoryController)
+
+// add to list
+route.post("/add-to-list",jwtMiddleware,listController.addListController)
 
 // ..............................ADMIN..............................
 
