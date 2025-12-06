@@ -42,6 +42,9 @@ route.get("/category/:categoryname",showController.getShowCategoryController)
 // add to list
 route.post("/add-to-list",jwtMiddleware,listController.addListController)
 
+// get list
+route.get("/get-list",jwtMiddleware,listController.getListController)
+
 // ..............................ADMIN..............................
 
 //add shows
