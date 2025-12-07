@@ -216,3 +216,18 @@ exports.getDroppedListController = async (req, res) => {
         res.status(500).json(err)
     }
 }
+
+exports.putStatusListController = async(req,res) => {
+    const {value, data}= req.body
+    const {_id,showid,title,rating,status,sDate,eDate,genre,imageUrl,userMail,favorite} = data
+    // console.log(value,_id,showid,title,rating,status,sDate,eDate,genre,imageUrl,userMail,favorite);
+    
+    
+    try{
+        const existingShow = await lists.findByIdAndUpdate(_id,{eDate, showid, title, rating, status:value, sDate, genre, imageUrl, userMail, favorite},{new:true})
+        res.status(200).json(existingShow)
+    }
+    catch(err){
+        res.status(200).json(err)
+    }
+}
