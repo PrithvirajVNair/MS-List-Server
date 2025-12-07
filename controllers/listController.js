@@ -231,3 +231,17 @@ exports.putStatusListController = async(req,res) => {
         res.status(200).json(err)
     }
 }
+
+exports.putListController = async(req,res) => {
+    const { _id,showid,title,rating,status,sDate,eDate,genre,imageUrl,userMail,favorite }= req.body
+    // console.log(value,_id,showid,title,rating,status,sDate,eDate,genre,imageUrl,userMail,favorite);
+    
+    
+    try{
+        const existingShow = await lists.findByIdAndUpdate(_id,{eDate:eDate, showid, title, rating:rating, status, sDate:sDate, genre, imageUrl, userMail, favorite},{new:true})
+        res.status(200).json(existingShow)
+    }
+    catch(err){
+        res.status(200).json(err)
+    }
+}

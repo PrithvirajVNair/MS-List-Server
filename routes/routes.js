@@ -72,6 +72,9 @@ route.get("/get-dropped-list",jwtMiddleware,listController.getDroppedListControl
 // put status list
 route.put("/put-status-list",jwtMiddleware,listController.putStatusListController)
 
+// put list
+route.put("/edit-list",jwtMiddleware,listController.putListController)
+
 // ..............................ADMIN..............................
 
 //add shows
