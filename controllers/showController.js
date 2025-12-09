@@ -1,11 +1,12 @@
 // import model
+const lists = require("../models/listModel");
 const shows = require("../models/showModel");
 const { generateSummary, generateEmbedding, cosineSimilarity } = require("../utils/aiUtils");
 
 
 //add show controller
 exports.addShowController = async (req, res) => {
-    const { title, language, summary, description, genre, embeddings, category, score, imageUrl } = req.body
+    const { title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl } = req.body
     console.log(title, language, summary, description, genre, embeddings, category, score, imageUrl);
     try {
         const existingShow = await shows.findOne({ title, language, category })
@@ -19,7 +20,7 @@ exports.addShowController = async (req, res) => {
                 showSummary = "Summary Unavailable"
             }
             const newShow = new shows({
-                title, language, summary: showSummary, description, genre, embeddings: showEmbeddings, category, score, imageUrl
+                title, language, summary: showSummary, description, genre, embeddings: showEmbeddings, category, score, scoreCount, imageUrl
             })
             await newShow.save()
             res.status(200).json(newShow)
@@ -34,8 +35,8 @@ exports.addShowController = async (req, res) => {
 exports.getShowController = async (req, res) => {
     const searchData = req.query.search
     const query = {
-        title:{
-            $regex:searchData, $options:"i"
+        title: {
+            $regex: searchData, $options: "i"
         }
     }
     try {
@@ -50,21 +51,21 @@ exports.getShowController = async (req, res) => {
 }
 
 //get show by category
-exports.getShowCategoryController = async (req,res) => {
-    const {categoryname} = req.params
+exports.getShowCategoryController = async (req, res) => {
+    const { categoryname } = req.params
     const searchData = req.query.search
     const query = {
-        title:{
-            $regex:searchData, $options:"i"
+        title: {
+            $regex: searchData, $options: "i"
         }
     }
-    try{
-        const show = await shows.find({$and:[query,{$or:[{language:{$regex:categoryname, $options:"i"}},{genre:{$regex:categoryname,$options:"i"}}]}]})
+    try {
+        const show = await shows.find({ $and: [query, { $or: [{ language: { $regex: categoryname, $options: "i" } }, { genre: { $regex: categoryname, $options: "i" } }] }] })
         res.status(200).json(show)
         console.log(categoryname);
-        
+
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 }
@@ -123,6 +124,25 @@ exports.getSimilarShows = async (req, res) => {
         res.status(200).json(results.slice(0, 6))
     }
     catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.updateShowRatingController = async (req, res) => {
+    const {showid} = req.body
+    try {
+        const ratings = await lists.find({ showid: showid }, { rating: 1 })
+        if (!ratings.length) {
+            await shows.findByIdAndUpdate(showid, { score: 0 })
+            return 0
+        }
+        const count = ratings.length
+        const sum = ratings.reduce((total, item) => total + item.rating, 0)
+        const avg = (sum / ratings.length).toFixed(1)
+        await shows.findByIdAndUpdate(showid, { score: avg, scoreCount: count })
+        res.status(200).json(avg)
+    }
+    catch(err){
         res.status(500).json(err)
     }
 }

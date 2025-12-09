@@ -85,6 +85,9 @@ route.post("/get-comment",commentController.getCommentController)
 //delete comments
 route.delete("/delete-comment",commentController.deleteCommentController)
 
+//update score
+route.put("/update-score",showController.updateShowRatingController)
+
 // ..............................ADMIN..............................
 
 //add shows
