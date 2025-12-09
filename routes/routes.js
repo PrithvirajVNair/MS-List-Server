@@ -6,6 +6,7 @@ const userController = require('../controllers/userController')
 const showController = require('../controllers/showController')
 const adminController = require('../controllers/adminController')
 const listController = require('../controllers/listController')
+const commentController = require('../controllers/commentController')
 const jwtMiddleware = require("../middleware/jwtMiddleware")
 //create instance for route
 const route = new express.Router()
@@ -74,6 +75,15 @@ route.put("/put-status-list",jwtMiddleware,listController.putStatusListControlle
 
 // put list
 route.put("/edit-list",jwtMiddleware,listController.putListController)
+
+// add comment
+route.post("/add-comment",jwtMiddleware,commentController.addCommentController)
+
+//get comments
+route.post("/get-comment",commentController.getCommentController)
+
+//delete comments
+route.delete("/delete-comment",commentController.deleteCommentController)
 
 // ..............................ADMIN..............................
 

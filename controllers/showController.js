@@ -5,8 +5,6 @@ const { generateSummary, generateEmbedding, cosineSimilarity } = require("../uti
 
 //add show controller
 exports.addShowController = async (req, res) => {
-    console.log(req.body);
-
     const { title, language, summary, description, genre, embeddings, category, score, imageUrl } = req.body
     console.log(title, language, summary, description, genre, embeddings, category, score, imageUrl);
     try {
@@ -35,7 +33,6 @@ exports.addShowController = async (req, res) => {
 // get show controller
 exports.getShowController = async (req, res) => {
     const searchData = req.query.search
-    console.log(searchData);
     const query = {
         title:{
             $regex:searchData, $options:"i"
@@ -54,8 +51,6 @@ exports.getShowController = async (req, res) => {
 
 //get show by category
 exports.getShowCategoryController = async (req,res) => {
-    console.log(req.params);
-    
     const {categoryname} = req.params
     const searchData = req.query.search
     const query = {
@@ -96,9 +91,6 @@ exports.getPopularShowController = async (req, res) => {
 
 exports.getAShowController = async (req, res) => {
     const { id } = req.params
-    console.log(id);
-
-
     try {
         const show = await shows.findOne({ _id: id })
         res.status(200).json(show)
