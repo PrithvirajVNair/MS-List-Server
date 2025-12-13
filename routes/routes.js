@@ -88,6 +88,9 @@ route.delete("/delete-comment",commentController.deleteCommentController)
 //update score
 route.put("/update-score",showController.updateShowRatingController)
 
+// get list
+route.get("/get-a-user",jwtMiddleware,userController.getAUserController)
+
 // ..............................ADMIN..............................
 
 //add shows

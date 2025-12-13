@@ -41,7 +41,7 @@ exports.loginController = async (req, res) => {
         if (existingUser) {
             const match = await bcrypt.compare(password, existingUser.password)
             if (match) {
-                const token = jwt.sign({ userMail: existingUser.email }, process.env.secretkey)
+                const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
                 return res.status(200).json({existingUser,token})
             }
             else {
@@ -65,7 +65,7 @@ exports.googleLoginController = async (req, res) => {
     try {
         const existingUser = await users.findOne({ email })
         if (existingUser) {
-            const token = jwt.sign({ userMail: existingUser.email }, process.env.secretkey)
+            const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
             res.status(200).json({ existingUser, token })
         }
         else {
@@ -80,5 +80,20 @@ exports.googleLoginController = async (req, res) => {
         res.status(500).json(err)
         console.log(err);
 
+    }
+}
+
+exports.getAUserController = async(req,res) => {
+    const email = req.query.email
+    console.log(email);
+    const query = {
+        email:email
+    }
+    try{
+        const User = await users.findOne(query)
+        res.status(200).json(User)
+    }
+    catch(err){
+        res.status(500).json(err)
     }
 }
