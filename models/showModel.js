@@ -41,6 +41,10 @@ const showSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         require: true
+    },
+    listCount: {
+        type: Number,
+        default:0
     }
 })
 

@@ -1,11 +1,11 @@
 const comments = require("../models/commentModel")
 
 exports.addCommentController = async(req,res) => {
-    const {comment,username,profile,showId} = req.body
+    const {comment,username,profile,showId, verified} = req.body
     const email = req.payload
     try{
         const newComment = new comments({
-            comment,username,profile,userMail:email,showId
+            comment,username,profile,userMail:email,showId,verified
         })
         await newComment.save()
         res.status(200).json(newComment)

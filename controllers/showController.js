@@ -80,7 +80,7 @@ exports.getRecentShowController = async (req, res) => {
     }
 }
 
-exports.getPopularShowController = async (req, res) => {
+exports.getMostRatedShowController = async (req, res) => {
     try {
         const PopularShows = await shows.find().sort({ score: -1 }).limit(6)
         res.status(200).json(PopularShows)
@@ -141,6 +141,16 @@ exports.updateShowRatingController = async (req, res) => {
         const avg = (sum / ratings.length).toFixed(1)
         await shows.findByIdAndUpdate(showid, { score: avg, scoreCount: count })
         res.status(200).json(avg)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.getPopularShowController = async(req,res) => {
+    try{
+        const popularShows = await shows.find().sort({listCount:-1}).limit(6)
+        res.status(200).json(popularShows)
     }
     catch(err){
         res.status(500).json(err)

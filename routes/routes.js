@@ -31,7 +31,10 @@ route.get("/recommendation/:id",showController.getSimilarShows)
 //get recent shows
 route.get("/recent-home",showController.getRecentShowController)
 
-//get popular shows
+//get most rated shows
+route.get("/most-rated-home",showController.getMostRatedShowController)
+
+//get most rated shows
 route.get("/popular-home",showController.getPopularShowController)
 
 // get a show
