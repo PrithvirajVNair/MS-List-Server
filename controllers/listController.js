@@ -15,6 +15,7 @@ exports.addListController = async (req, res) => {
                 showid, title, rating, status, sDate, eDate, genre, imageUrl, userMail: email, favorite
             })
             await newList.save()
+            // following is for popularity
             await shows.findByIdAndUpdate(showid,{$inc:{listCount:1}})
             res.status(200).json(newList)
         }

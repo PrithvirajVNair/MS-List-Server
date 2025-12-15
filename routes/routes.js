@@ -6,6 +6,7 @@ const userController = require('../controllers/userController')
 const showController = require('../controllers/showController')
 const adminController = require('../controllers/adminController')
 const listController = require('../controllers/listController')
+const customListController = require('../controllers/customListController')
 const commentController = require('../controllers/commentController')
 const jwtMiddleware = require("../middleware/jwtMiddleware")
 //create instance for route
@@ -91,8 +92,47 @@ route.delete("/delete-comment",commentController.deleteCommentController)
 //update score
 route.put("/update-score",showController.updateShowRatingController)
 
-// get list
+// get user for profile
 route.get("/get-a-user",jwtMiddleware,userController.getAUserController)
+
+// ====> CUSTOM LIST <====
+
+// add to list
+route.post("/add-to-custom-list",jwtMiddleware,customListController.addCustomListController)
+
+// get list
+route.get("/get-custom-list",jwtMiddleware,customListController.getCustomListController)
+
+// get fav list
+route.get("/get-fav-custom-list",jwtMiddleware,customListController.getCustomFavListController)
+
+// add fav list
+route.put("/add-fav-custom-list",jwtMiddleware,customListController.addCustomFavListController)
+
+// remove fav list
+route.put("/remove-fav-custom-list",jwtMiddleware,customListController.removeCustomFavListController)
+
+// get planning list
+route.get("/get-planning-custom-list",jwtMiddleware,customListController.getCustomPlanningListController)
+
+// get watching list
+route.get("/get-watching-custom-list",jwtMiddleware,customListController.getCustomWatchingListController)
+
+// get onhold list
+route.get("/get-onhold-custom-list",jwtMiddleware,customListController.getCustomOnHoldListController)
+
+// get completed list
+route.get("/get-completed-custom-list",jwtMiddleware,customListController.getCustomCompletedListController)
+
+// get dropped list
+route.get("/get-dropped-custom-list",jwtMiddleware,customListController.getCustomDroppedListController)
+
+// put status list
+route.put("/put-status-custom-list",jwtMiddleware,customListController.putCustomStatusListController)
+
+// put list
+route.put("/edit-custom-list",jwtMiddleware,customListController.putCustomListController)
+
 
 // ..............................ADMIN..............................
 
