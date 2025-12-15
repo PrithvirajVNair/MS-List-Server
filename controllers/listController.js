@@ -247,3 +247,17 @@ exports.putListController = async(req,res) => {
         res.status(200).json(err)
     }
 }
+
+exports.deleteListController = async(req,res) => {
+    const {id,showid} = req.body
+    console.log(req.body);
+    
+    try{
+        const deleteStatus = await lists.findByIdAndDelete(id)
+        res.status(200).json(deleteStatus)
+        await shows.findByIdAndUpdate(showid,{$inc:{listCount:-1}})
+    }
+    catch(err){
+        res.status(200).json(err)
+    }
+}

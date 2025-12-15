@@ -95,6 +95,9 @@ route.put("/update-score",showController.updateShowRatingController)
 // get user for profile
 route.get("/get-a-user",jwtMiddleware,userController.getAUserController)
 
+// delete list
+route.delete("/delete-list",jwtMiddleware,listController.deleteListController)
+
 // ====> CUSTOM LIST <====
 
 // add to list
@@ -133,6 +136,8 @@ route.put("/put-status-custom-list",jwtMiddleware,customListController.putCustom
 // put list
 route.put("/edit-custom-list",jwtMiddleware,customListController.putCustomListController)
 
+// delete list
+route.delete("/delete-custom-list",jwtMiddleware,customListController.deleteCustomListController)
 
 // ..............................ADMIN..............................
 

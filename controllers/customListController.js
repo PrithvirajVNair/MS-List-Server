@@ -233,3 +233,16 @@ exports.putCustomListController = async(req,res) => {
         res.status(200).json(err)
     }
 }
+
+exports.deleteCustomListController = async(req,res) => {
+    const {id} = req.body
+    console.log(req.body);
+    
+    try{
+        const deleteStatus = await mylists.findByIdAndDelete(id)
+        res.status(200).json(deleteStatus)
+    }
+    catch(err){
+        res.status(200).json(err)
+    }
+}
