@@ -45,6 +45,13 @@ const showSchema = new mongoose.Schema({
     listCount: {
         type: Number,
         default:0
+    },
+    coverUrl: {
+        type: String
+    },
+    featured: {
+        type: Boolean,
+        default: false
     }
 })
 

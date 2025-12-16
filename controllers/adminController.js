@@ -44,3 +44,29 @@ exports.deleteShowController = async(req,res) => {
         res.status(500).json(err)
     }
 }
+
+exports.addToFeaturedController = async(req,res) => {
+    const {_id, title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl, coverUrl} = req.body
+    console.log(_id);
+    
+    try{
+        const AllFeaturedShows = await shows.findByIdAndUpdate(_id,{title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl, coverUrl,featured:true})
+        res.status(200).json(AllFeaturedShows)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.removeFromFeaturedController = async(req,res) => {
+    const {_id, title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl, coverUrl} = req.body
+    console.log(_id);
+    
+    try{
+        const AllFeaturedShows = await shows.findByIdAndUpdate(_id,{title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl, coverUrl,featured:false})
+        res.status(200).json(AllFeaturedShows)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}

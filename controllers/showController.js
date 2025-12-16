@@ -6,7 +6,7 @@ const { generateSummary, generateEmbedding, cosineSimilarity } = require("../uti
 
 //add show controller
 exports.addShowController = async (req, res) => {
-    const { title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl } = req.body
+    const { title, language, summary, description, genre, embeddings, category, score, scoreCount, imageUrl, coverUrl } = req.body
     console.log(title, language, summary, description, genre, embeddings, category, score, imageUrl);
     try {
         const existingShow = await shows.findOne({ title, language, category })
@@ -20,7 +20,7 @@ exports.addShowController = async (req, res) => {
                 showSummary = "Summary Unavailable"
             }
             const newShow = new shows({
-                title, language, summary: showSummary, description, genre, embeddings: showEmbeddings, category, score, scoreCount, imageUrl
+                title, language, summary: showSummary, description, genre, embeddings: showEmbeddings, category, score, scoreCount, imageUrl, coverUrl
             })
             await newShow.save()
             res.status(200).json(newShow)
@@ -151,6 +151,16 @@ exports.getPopularShowController = async(req,res) => {
     try{
         const popularShows = await shows.find().sort({listCount:-1}).limit(6)
         res.status(200).json(popularShows)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.getFeaturedShowController = async(req,res) => {
+    try{
+        const FeaturedShows = await shows.find({featured:true})
+        res.status(200).json(FeaturedShows)
     }
     catch(err){
         res.status(500).json(err)

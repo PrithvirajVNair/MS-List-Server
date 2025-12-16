@@ -30,6 +30,9 @@ route.get("/recommendation/:id",showController.getSimilarShows)
 // ........................USER.....................................
 
 //get recent shows
+route.get("/featured-home",showController.getFeaturedShowController)
+
+//get recent shows
 route.get("/recent-home",showController.getRecentShowController)
 
 //get most rated shows
@@ -155,5 +158,11 @@ route.delete("/delete-user",adminController.deleteUserController)
 
 // delete show
 route.delete("/delete-show",adminController.deleteShowController)
+
+// add to featured
+route.put("/add-to-featured",adminController.addToFeaturedController)
+
+// remove from featured
+route.put("/remove-from-featured",adminController.removeFromFeaturedController)
 
 module.exports = route
