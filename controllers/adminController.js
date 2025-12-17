@@ -70,3 +70,41 @@ exports.removeFromFeaturedController = async(req,res) => {
         res.status(500).json(err)
     }
 }
+
+exports.banUserController = async(req,res) => {
+    const {email} = req.body
+    console.log(email);
+    
+    try{
+        const User = await users.findOne({email:email})
+        if(!User){
+            return res.status(401).json("User Not Found")
+        }
+
+        User.restriction = true
+        await User.save()
+        res.status(200).json("User Banned Successfully")
+        
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.unBanUserController = async(req,res) => {
+    const {email} = req.body
+    try{
+        const User = await users.findOne({email:email})
+        if(!User){
+            return res.status(401).json("User Not Found")
+        }
+
+        User.restriction = false
+        await User.save()
+        res.status(200).json("User Unbanned Successfully")
+        
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}

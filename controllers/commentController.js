@@ -1,11 +1,14 @@
 const comments = require("../models/commentModel")
+const users = require("../models/userModel")
 
 exports.addCommentController = async(req,res) => {
     const {comment,username,profile,showId, verified} = req.body
     const email = req.payload
     try{
+        const user = await users.findOne({email:email})
+        const {_id} = user
         const newComment = new comments({
-            comment,username,profile,userMail:email,showId,verified
+            comment,userId:_id,showId
         })
         await newComment.save()
         res.status(200).json(newComment)
@@ -19,7 +22,7 @@ exports.getCommentController = async(req,res) => {
     const {id} = req.body
     
     try{
-        const existingComments = await comments.find({showId:id}).sort({createdAt:-1})
+        const existingComments = await comments.find({showId:id}).sort({createdAt:-1}).populate("userId")
         res.status(200).json(existingComments)
     }
     catch(err){

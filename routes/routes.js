@@ -8,6 +8,7 @@ const adminController = require('../controllers/adminController')
 const listController = require('../controllers/listController')
 const customListController = require('../controllers/customListController')
 const commentController = require('../controllers/commentController')
+const reportController = require('../controllers/reportController')
 const jwtMiddleware = require("../middleware/jwtMiddleware")
 //create instance for route
 const route = new express.Router()
@@ -101,6 +102,12 @@ route.get("/get-a-user",jwtMiddleware,userController.getAUserController)
 // delete list
 route.delete("/delete-list",jwtMiddleware,listController.deleteListController)
 
+// report comment
+route.post("/report-comment",jwtMiddleware,reportController.addReportController)
+
+// get reports 
+route.get("/get-report",jwtMiddleware,reportController.getReportController)
+
 // ====> CUSTOM LIST <====
 
 // add to list
@@ -164,5 +171,14 @@ route.put("/add-to-featured",adminController.addToFeaturedController)
 
 // remove from featured
 route.put("/remove-from-featured",adminController.removeFromFeaturedController)
+
+//delete report
+route.delete("/delete-report",reportController.deleteReportController)
+
+// ban user
+route.put("/ban-user",adminController.banUserController)
+
+// unban user
+route.put("/unban-user",adminController.unBanUserController)
 
 module.exports = route
