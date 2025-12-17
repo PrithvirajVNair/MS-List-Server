@@ -39,13 +39,18 @@ exports.loginController = async (req, res) => {
     try {
         const existingUser = await users.findOne({ email })
         if (existingUser) {
-            const match = await bcrypt.compare(password, existingUser.password)
-            if (match) {
-                const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
-                return res.status(200).json({existingUser,token})
+            if (existingUser.restriction) {
+                res.status(401).json("This Account is Suspended!")
             }
             else {
-                return res.status(401).json("Password Does not Match!")
+                const match = await bcrypt.compare(password, existingUser.password)
+                if (match) {
+                    const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
+                    return res.status(200).json({ existingUser, token })
+                }
+                else {
+                    return res.status(401).json("Password Does not Match!")
+                }
             }
         }
         else {
@@ -61,20 +66,25 @@ exports.loginController = async (req, res) => {
 //login
 exports.googleLoginController = async (req, res) => {
     const { email, password, username, photo } = req.body
-    hashedPassword = await bcrypt.hash(password,saltRounds)
+    hashedPassword = await bcrypt.hash(password, saltRounds)
     try {
         const existingUser = await users.findOne({ email })
         if (existingUser) {
-            const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
-            res.status(200).json({ existingUser, token })
+            if (existingUser.restriction) {
+                res.status(401).json("This Account is Suspended!")
+            }
+            else {
+                const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
+                res.status(200).json({ existingUser, token })
+            }
         }
         else {
             const newUser = new users({
-                username, email, password:hashedPassword, profile:photo
+                username, email, password: hashedPassword, profile: photo
             })
             await newUser.save()
             const token = jwt.sign({ userMail: newUser.email }, process.env.secretkey)
-            res.status(200).json({existingUser:newUser,token})
+            res.status(200).json({ existingUser: newUser, token })
         }
     } catch (err) {
         res.status(500).json(err)
@@ -83,17 +93,17 @@ exports.googleLoginController = async (req, res) => {
     }
 }
 
-exports.getAUserController = async(req,res) => {
+exports.getAUserController = async (req, res) => {
     const email = req.query.email
     console.log(email);
     const query = {
-        email:email
+        email: email
     }
-    try{
+    try {
         const User = await users.findOne(query)
         res.status(200).json(User)
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 }
