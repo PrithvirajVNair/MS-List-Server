@@ -2,7 +2,9 @@ const nodemailer = require("nodemailer")
 
 // Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,        // SSL
+  secure: true, 
   auth: {
     user: process.env.FROM_EMAIL,
     pass: process.env.PASS_EMAIL,
