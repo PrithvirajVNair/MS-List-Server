@@ -27,7 +27,7 @@ exports.registerController = async (req, res) => {
                 username, email, password: hashedPassword, otp: otp
             })
             await newUser.save()
-            await sendEmail(email, "Welcome To MS LIST", `Your OTP is ${otp}`, `<h2>Your OTP is ${otp}</h2>`)
+            sendEmail(email, "Welcome To MS LIST", `Your OTP is ${otp}`, `<h2>Your OTP is ${otp}</h2>`)
             res.status(200).json(newUser)
         }
     }
@@ -59,7 +59,7 @@ exports.loginController = async (req, res) => {
                     }
                 }
                 else{
-                    await sendEmail(email, "Welcome To MS LIST", `Your OTP is ${existingUser.otp}`, `<h2>Your OTP is ${existingUser.otp}</h2>`)
+                    sendEmail(email, "Welcome To MS LIST", `Your OTP is ${existingUser.otp}`, `<h2>Your OTP is ${existingUser.otp}</h2>`)
                     return res.status(403).json('/verify-otp')
                 }
             }
