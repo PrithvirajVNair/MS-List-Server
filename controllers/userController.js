@@ -3,6 +3,7 @@ const users = require("../models/userModel")
 const bcrypt = require("bcrypt")
 const saltRounds = 10
 const jwt = require('jsonwebtoken')
+const sendEmail = require("../utils/otpVerify")
 
 //register
 exports.registerController = async (req, res) => {
@@ -18,11 +19,15 @@ exports.registerController = async (req, res) => {
             }
         }
         else {
+            const otp = Math.floor(100000 + Math.random() * 900000)
+            console.log(otp);
+
             const hashedPassword = await bcrypt.hash(password, saltRounds)
             const newUser = new users({
-                username, email, password: hashedPassword
+                username, email, password: hashedPassword, otp: otp
             })
             await newUser.save()
+            await sendEmail(email, "Welcome To MS LIST", `Your OTP is ${otp}`, `<h2>Your OTP is ${otp}</h2>`)
             res.status(200).json(newUser)
         }
     }
@@ -43,13 +48,19 @@ exports.loginController = async (req, res) => {
                 res.status(401).json("This Account is Suspended!")
             }
             else {
-                const match = await bcrypt.compare(password, existingUser.password)
-                if (match) {
-                    const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
-                    return res.status(200).json({ existingUser, token })
+                if (existingUser.otpVerified) {
+                    const match = await bcrypt.compare(password, existingUser.password)
+                    if (match) {
+                        const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
+                        return res.status(200).json({ existingUser, token })
+                    }
+                    else {
+                        return res.status(401).json("Password Does not Match!")
+                    }
                 }
-                else {
-                    return res.status(401).json("Password Does not Match!")
+                else{
+                    await sendEmail(email, "Welcome To MS LIST", `Your OTP is ${existingUser.otp}`, `<h2>Your OTP is ${existingUser.otp}</h2>`)
+                    return res.status(403).json('/verify-otp')
                 }
             }
         }
@@ -102,6 +113,26 @@ exports.getAUserController = async (req, res) => {
     try {
         const User = await users.findOne(query)
         res.status(200).json(User)
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.verifyOtpController = async (req, res) => {
+    const { email, otp } = req.body
+    try {
+        const user = await users.findOne({ email: email })
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        if (user.otp !== otp) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+        user.otpVerified = true;
+        user.otp = undefined;
+        await user.save();
+        res.status(200).json({ message: "Account verified successfully" });
     }
     catch (err) {
         res.status(500).json(err)

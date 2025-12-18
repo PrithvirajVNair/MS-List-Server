@@ -31,6 +31,13 @@ const userSchema = new mongoose.Schema({
     restriction:{
         type: Boolean,
         default:false
+    },
+    otpVerified:{
+        type: Boolean,
+        default:false
+    },
+    otp:{
+        type: String,
     }
 })
 

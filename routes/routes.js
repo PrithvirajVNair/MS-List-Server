@@ -28,6 +28,9 @@ route.get("/search",showController.getShowController)
 // recommendation
 route.get("/recommendation/:id",showController.getSimilarShows)
 
+// otp verify
+route.put("/verify-opt",userController.verifyOtpController)
+
 // ........................USER.....................................
 
 //get recent shows
