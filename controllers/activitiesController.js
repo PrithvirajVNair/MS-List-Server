@@ -33,6 +33,39 @@ exports.addCommentActivityController = async(req,res) =>{
     }
 }
 
+exports.deleteShowActivityController = async(req,res) => {
+    const {showId} = req.body
+    console.log(req.body);
+    const email = req.payload
+    try{
+        const showActivity = await activities.findOne({userMail:email, showId})
+        console.log(showActivity);
+        
+        const deleteShowActivity = await activities.findByIdAndDelete(showActivity._id)
+        res.status(200).json(deleteShowActivity)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.deleteCommentActivityController = async(req,res) => {
+    const {commentId} = req.body
+    console.log(req.body);
+    
+    const email = req.payload
+    try{
+        const commentActivity = await activities.findOne({userMail:email, commentId})
+        console.log(commentActivity);
+        
+        const deleteCommentActivity = await activities.findByIdAndDelete(commentActivity._id)
+        res.status(200).json(deleteCommentActivity)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
+}
+
 exports.getActivityController = async(req,res) => {
     const email = req.payload
     try{

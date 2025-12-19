@@ -250,7 +250,7 @@ exports.putListController = async(req,res) => {
 
 exports.deleteListController = async(req,res) => {
     const {id,showid} = req.body
-    console.log(req.body);
+    // console.log(req.body);
     
     try{
         const deleteStatus = await lists.findByIdAndDelete(id)

@@ -32,7 +32,7 @@ exports.getCommentController = async(req,res) => {
 
 exports.deleteCommentController = async(req,res) => {
     const id = req.body.id
-    console.log(id);
+    // console.log(id);
     
     try{
         const deleteComment = await comments.deleteOne({_id:id})

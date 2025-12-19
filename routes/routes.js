@@ -124,6 +124,12 @@ route.post("/show-activity",jwtMiddleware,activitiesController.addShowActivityCo
 // add show activity
 route.get("/get-activity",jwtMiddleware,activitiesController.getActivityController)
 
+//delete comment activity
+route.delete("/delete-comment-activity",jwtMiddleware,activitiesController.deleteCommentActivityController)
+
+//delete-show-activity
+route.delete("/delete-show-activity",jwtMiddleware,activitiesController.deleteShowActivityController)
+
 // ====> CUSTOM LIST <====
 
 // add to list
