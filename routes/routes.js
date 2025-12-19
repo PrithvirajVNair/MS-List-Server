@@ -9,6 +9,7 @@ const listController = require('../controllers/listController')
 const customListController = require('../controllers/customListController')
 const commentController = require('../controllers/commentController')
 const reportController = require('../controllers/reportController')
+const activitiesController = require('../controllers/activitiesController')
 const jwtMiddleware = require("../middleware/jwtMiddleware")
 //create instance for route
 const route = new express.Router()
@@ -110,6 +111,18 @@ route.post("/report-comment",jwtMiddleware,reportController.addReportController)
 
 // get reports 
 route.get("/get-report",jwtMiddleware,reportController.getReportController)
+
+// get reports 
+route.get("/get-list-count",jwtMiddleware,listController.getListCountController)
+
+// add comment activity
+route.post("/comment-activity",jwtMiddleware,activitiesController.addCommentActivityController)
+
+// add show activity
+route.post("/show-activity",jwtMiddleware,activitiesController.addShowActivityController)
+
+// add show activity
+route.get("/get-activity",jwtMiddleware,activitiesController.getActivityController)
 
 // ====> CUSTOM LIST <====
 

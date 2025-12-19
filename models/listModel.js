@@ -38,6 +38,10 @@ const listSchema = new mongoose.Schema({
     favorite:{
         type:Boolean,
         default:false
+    },
+    updatedAt:{
+        type: Date,
+        default: Date.now
     }
 })
 

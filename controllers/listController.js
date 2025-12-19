@@ -58,7 +58,7 @@ exports.addFavListController = async(req,res) => {
         res.status(200).json(existingShow)
     }
     catch(err){
-        res.status(200).json(err)
+        res.status(500).json(err)
     }
 }
 
@@ -230,7 +230,7 @@ exports.putStatusListController = async(req,res) => {
         res.status(200).json(existingShow)
     }
     catch(err){
-        res.status(200).json(err)
+        res.status(500).json(err)
     }
 }
 
@@ -244,7 +244,7 @@ exports.putListController = async(req,res) => {
         res.status(200).json(existingShow)
     }
     catch(err){
-        res.status(200).json(err)
+        res.status(500).json(err)
     }
 }
 
@@ -258,6 +258,22 @@ exports.deleteListController = async(req,res) => {
         await shows.findByIdAndUpdate(showid,{$inc:{listCount:-1}})
     }
     catch(err){
-        res.status(200).json(err)
+        res.status(500).json(err)
+    }
+}
+
+exports.getListCountController = async(req,res) => {
+    const email = req.payload
+    try{
+        const allShows = await lists.countDocuments({userMail:email})
+        const planning = await lists.countDocuments({userMail:email, status:"planning"})
+        const watching = await lists.countDocuments({userMail:email, status:"watching"})
+        const completed = await lists.countDocuments({userMail:email, status:"completed"})
+        const onhold = await lists.countDocuments({userMail:email, status:"onhold"})
+        const dropped = await lists.countDocuments({userMail:email, status:"dropped"})
+        res.status(200).json({allShows,planning,watching,completed,onhold,dropped})
+    }
+    catch(err){
+        res.status(500).json(err)
     }
 }
