@@ -30,7 +30,7 @@ route.get("/search",showController.getShowController)
 route.get("/recommendation/:id",showController.getSimilarShows)
 
 // otp verify
-route.put("/verify-opt",userController.verifyOtpController)
+route.put("/verify-otp",userController.verifyOtpController)
 
 // ........................USER.....................................
 
