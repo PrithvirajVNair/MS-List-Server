@@ -27,7 +27,7 @@ exports.registerController = async (req, res) => {
                 username, email, password: hashedPassword, otp: otp, otpExpiresAt: Date.now()+10*60*1000
             })
             await newUser.save()
-            sendEmail(email, "Welcome To MS LIST", `Your OTP is ${otp}`, `<h2>Your OTP is ${otp}</h2>`)
+            // sendEmail(email, "Welcome To MS LIST", `Your OTP is ${otp}`, `<h2>Your OTP is ${otp}</h2>`)
             res.status(200).json(newUser)
         }
     }
@@ -48,7 +48,7 @@ exports.loginController = async (req, res) => {
                 res.status(401).json("This Account is Suspended!")
             }
             else {
-                if (existingUser.otpVerified) {
+                // if (existingUser.otpVerified) {
                     const match = await bcrypt.compare(password, existingUser.password)
                     if (match) {
                         const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
@@ -57,39 +57,39 @@ exports.loginController = async (req, res) => {
                     else {
                         return res.status(401).json("Password Does not Match!")
                     }
-                }
-                else {
-                    if (!existingUser.otp) {
-                        const otp = Math.floor(100000 + Math.random() * 900000)
-                        await users.findByIdAndUpdate(existingUser._id, { otp: otp, otpExpiresAt: Date.now()+10*60*1000 }, { new: true })
-                    }
-                    if (Date.now() > existingUser.otpExpiresAt){
-                        const otp = Math.floor(100000 + Math.random() * 900000)
-                        await users.findByIdAndUpdate(existingUser._id, { otp: otp, otpExpiresAt: Date.now()+10*60*1000 }, { new: true })
-                    }
-                    sendEmail(
-                        email,
-                        "Your MS List Verification Code",
-                        `Your MS List OTP is ${existingUser.otp}. This code will expire in 10 minutes.`,
-                        `<div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
-                        <h2 style="color: #2c3e50; text-align: center;">Welcome to MS List 🎉</h2>
-                        <p>Hello,</p>
-                        <p>Thank you for choosing <strong>MS List</strong>. Please use the verification code below to complete your sign-in:</p>
-                        <div style="text-align: center; margin: 30px 0;">
-                        <span style="font-size: 28px; letter-spacing: 6px; font-weight: bold; color: #1abc9c;">
-                        ${existingUser.otp}
-                        </span>
-                        </div>
-                        <p>This code will expire in <strong>10 minutes</strong>.</p>
-                        <p>If you did not request this code, please ignore this email.</p>
-                        <hr style="margin: 30px 0;" />
-                        <p style="font-size: 12px; color: #777; text-align: center;">
-                        © ${new Date().getFullYear()} MS List. All rights reserved.
-                        </p>
-                        </div>`
-                    );
-                    return res.status(403).json('/verify-otp')
-                }
+                // }
+                // else {
+                //     if (!existingUser.otp) {
+                //         const otp = Math.floor(100000 + Math.random() * 900000)
+                //         await users.findByIdAndUpdate(existingUser._id, { otp: otp, otpExpiresAt: Date.now()+10*60*1000 }, { new: true })
+                //     }
+                //     if (Date.now() > existingUser.otpExpiresAt){
+                //         const otp = Math.floor(100000 + Math.random() * 900000)
+                //         await users.findByIdAndUpdate(existingUser._id, { otp: otp, otpExpiresAt: Date.now()+10*60*1000 }, { new: true })
+                //     }
+                //     sendEmail(
+                //         email,
+                //         "Your MS List Verification Code",
+                //         `Your MS List OTP is ${existingUser.otp}. This code will expire in 10 minutes.`,
+                //         `<div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 8px;">
+                //         <h2 style="color: #2c3e50; text-align: center;">Welcome to MS List 🎉</h2>
+                //         <p>Hello,</p>
+                //         <p>Thank you for choosing <strong>MS List</strong>. Please use the verification code below to complete your sign-in:</p>
+                //         <div style="text-align: center; margin: 30px 0;">
+                //         <span style="font-size: 28px; letter-spacing: 6px; font-weight: bold; color: #1abc9c;">
+                //         ${existingUser.otp}
+                //         </span>
+                //         </div>
+                //         <p>This code will expire in <strong>10 minutes</strong>.</p>
+                //         <p>If you did not request this code, please ignore this email.</p>
+                //         <hr style="margin: 30px 0;" />
+                //         <p style="font-size: 12px; color: #777; text-align: center;">
+                //         © ${new Date().getFullYear()} MS List. All rights reserved.
+                //         </p>
+                //         </div>`
+                //     );
+                //     return res.status(403).json('/verify-otp')
+                // }
             }
         }
         else {
