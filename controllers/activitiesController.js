@@ -1,4 +1,5 @@
 const activities = require("../models/activitiesModel")
+const users = require("../models/userModel")
 
 
 
@@ -67,15 +68,16 @@ exports.deleteCommentActivityController = async(req,res) => {
 }
 
 exports.getActivityController = async(req,res) => {
-    const email = req.payload
+    const id = req.params.id
     try{
-        const allCommentActivities = await activities.find({userMail:email,category:"comment"}).populate({
+        const User = await users.findOne({_id:id})
+        const allCommentActivities = await activities.find({userMail:User.email,category:"comment"}).populate({
             path:"commentId",
             populate:{
                 path:"showId"
             }
         })
-        const allListActivities = await activities.find({userMail:email,category:"list"}).populate("showId")
+        const allListActivities = await activities.find({userMail:User.email,category:"list"}).populate("showId")
         allCommentActivities.push(...allListActivities)
         const sorted = allCommentActivities.sort((a,b)=>b.createdAt-a.createdAt)
         // const Length = allCommentActivities.length + allListActivities.length

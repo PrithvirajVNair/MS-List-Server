@@ -1,5 +1,6 @@
 const lists = require("../models/listModel")
 const shows = require("../models/showModel")
+const users = require("../models/userModel")
 
 
 exports.addListController = async (req, res) => {
@@ -263,14 +264,17 @@ exports.deleteListController = async(req,res) => {
 }
 
 exports.getListCountController = async(req,res) => {
-    const email = req.payload
+    const id = req.params.id
+    console.log(id); 
+    
     try{
-        const allShows = await lists.countDocuments({userMail:email})
-        const planning = await lists.countDocuments({userMail:email, status:"planning"})
-        const watching = await lists.countDocuments({userMail:email, status:"watching"})
-        const completed = await lists.countDocuments({userMail:email, status:"completed"})
-        const onhold = await lists.countDocuments({userMail:email, status:"onhold"})
-        const dropped = await lists.countDocuments({userMail:email, status:"dropped"})
+        const User = await users.findOne({_id:id})
+        const allShows = await lists.countDocuments({userMail:User.email})
+        const planning = await lists.countDocuments({userMail:User.email, status:"planning"})
+        const watching = await lists.countDocuments({userMail:User.email, status:"watching"})
+        const completed = await lists.countDocuments({userMail:User.email, status:"completed"})
+        const onhold = await lists.countDocuments({userMail:User.email, status:"onhold"})
+        const dropped = await lists.countDocuments({userMail:User.email, status:"dropped"})
         res.status(200).json({allShows,planning,watching,completed,onhold,dropped})
     }
     catch(err){

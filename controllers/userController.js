@@ -14,9 +14,9 @@ exports.registerController = async (req, res) => {
             if (existingUser.email == email) {
                 return res.status(400).json("Already Registered User...")
             }
-            if (existingUser.username == username) {
-                return res.status(400).json("Username already taken!")
-            }
+            // if (existingUser.username == username) {
+            //     return res.status(400).json("Username already taken!")
+            // }
         }
         else {
             const otp = Math.floor(100000 + Math.random() * 900000)
@@ -24,7 +24,7 @@ exports.registerController = async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(password, saltRounds)
             const newUser = new users({
-                username, email, password: hashedPassword, otp: otp, otpExpiresAt: Date.now()+10*60*1000
+                username, email, password: hashedPassword, otp: otp, otpExpiresAt: Date.now() + 10 * 60 * 1000
             })
             await newUser.save()
             // sendEmail(email, "Welcome To MS LIST", `Your OTP is ${otp}`, `<h2>Your OTP is ${otp}</h2>`)
@@ -49,14 +49,14 @@ exports.loginController = async (req, res) => {
             }
             else {
                 // if (existingUser.otpVerified) {
-                    const match = await bcrypt.compare(password, existingUser.password)
-                    if (match) {
-                        const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
-                        return res.status(200).json({ existingUser, token })
-                    }
-                    else {
-                        return res.status(401).json("Password Does not Match!")
-                    }
+                const match = await bcrypt.compare(password, existingUser.password)
+                if (match) {
+                    const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
+                    return res.status(200).json({ existingUser, token })
+                }
+                else {
+                    return res.status(401).json("Password Does not Match!")
+                }
                 // }
                 // else {
                 //     if (!existingUser.otp) {
@@ -133,13 +133,25 @@ exports.googleLoginController = async (req, res) => {
 }
 
 exports.getAUserController = async (req, res) => {
-    const email = req.query.email
-    console.log(email);
+    const id = req.params.id
+    // console.log(id);
     const query = {
-        email: email
+        _id: id
     }
     try {
-        const User = await users.findOne(query)
+        const User = await users.findOne(query)        
+        res.status(200).json(User)
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.getAUserEmailController = async (req, res) => {
+    const { email } = req.query
+    // console.log(req.query);
+    try {
+        const User = await users.findOne({ email })
         res.status(200).json(User)
     }
     catch (err) {
@@ -157,7 +169,7 @@ exports.verifyOtpController = async (req, res) => {
         if (user.otp !== otp) {
             return res.status(400).json("Invalid OTP");
         }
-        if(Date.now() > user.otpExpiresAt){
+        if (Date.now() > user.otpExpiresAt) {
             return res.status(403).json("OTP Expired");
         }
         user.otpVerified = true;
@@ -168,5 +180,26 @@ exports.verifyOtpController = async (req, res) => {
     }
     catch (err) {
         res.status(500).json(err)
+    }
+}
+
+exports.editUserController = async (req, res) => {
+    const { id, email, username, profile, bio } = req.body
+    const userMail = req.payload
+    console.log(req.body);
+
+    try {
+        if (userMail != email) {
+            return res.status(403).json("No Permission")
+        }
+        else {
+            const editProfile = await users.findByIdAndUpdate(id, { username, profile, bio }, { new: true })
+            res.status(200).json(editProfile)
+        }
+    }
+    catch (err) {
+        res.status(500).json(err)
+        console.log(err);
+
     }
 }

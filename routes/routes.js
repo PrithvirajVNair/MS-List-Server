@@ -101,7 +101,10 @@ route.delete("/delete-comment",commentController.deleteCommentController)
 route.put("/update-score",showController.updateShowRatingController)
 
 // get user for profile
-route.get("/get-a-user",jwtMiddleware,userController.getAUserController)
+route.get("/get-a-user/:id",jwtMiddleware,userController.getAUserController)
+
+// get user for header
+route.get("/get-a-email-user",jwtMiddleware,userController.getAUserEmailController)
 
 // delete list
 route.delete("/delete-list",jwtMiddleware,listController.deleteListController)
@@ -113,7 +116,7 @@ route.post("/report-comment",jwtMiddleware,reportController.addReportController)
 route.get("/get-report",jwtMiddleware,reportController.getReportController)
 
 // get reports 
-route.get("/get-list-count",jwtMiddleware,listController.getListCountController)
+route.get("/get-list-count/:id",listController.getListCountController)
 
 // add comment activity
 route.post("/comment-activity",jwtMiddleware,activitiesController.addCommentActivityController)
@@ -122,13 +125,16 @@ route.post("/comment-activity",jwtMiddleware,activitiesController.addCommentActi
 route.post("/show-activity",jwtMiddleware,activitiesController.addShowActivityController)
 
 // add show activity
-route.get("/get-activity",jwtMiddleware,activitiesController.getActivityController)
+route.get("/get-activity/:id",activitiesController.getActivityController)
 
 //delete comment activity
 route.delete("/delete-comment-activity",jwtMiddleware,activitiesController.deleteCommentActivityController)
 
 //delete-show-activity
 route.delete("/delete-show-activity",jwtMiddleware,activitiesController.deleteShowActivityController)
+
+//update profile
+route.put("/update-profile",userController.editUserController)
 
 // ====> CUSTOM LIST <====
 
