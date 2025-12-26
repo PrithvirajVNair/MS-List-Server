@@ -49,6 +49,9 @@ route.get("/popular-home",showController.getPopularShowController)
 // get a show
 route.get("/details/:id",showController.getAShowController)
 
+// edit show
+route.put("/update-show",showController.editContentController)
+
 // get category/language based shows
 route.get("/category/:categoryname",showController.getShowCategoryController)
 
@@ -134,7 +137,7 @@ route.delete("/delete-comment-activity",jwtMiddleware,activitiesController.delet
 route.delete("/delete-show-activity",jwtMiddleware,activitiesController.deleteShowActivityController)
 
 //update profile
-route.put("/update-profile",userController.editUserController)
+route.put("/update-profile",jwtMiddleware,userController.editUserController)
 
 // ====> CUSTOM LIST <====
 

@@ -31,6 +31,38 @@ exports.addShowController = async (req, res) => {
     }
 }
 
+exports.editContentController = async (req, res) => {
+    const { _id, title, category, language, genre, summary, description, embeddings } = req.body
+    // console.log(req.body);
+    
+    try {
+        const editContent = await shows.findOne({ _id: _id })
+        // console.log(editContent);
+        
+        if (!editContent) {
+            return res.status(404).json("Content Not Found")
+        }
+        else {
+            if (editContent.description != description) {
+                let showSummary = await generateSummary(description)
+                const showEmbeddings = await generateEmbedding(description)
+                editContent.description = description
+                editContent.summary = showSummary
+                editContent.embeddings = showEmbeddings
+            }
+            editContent.title = title
+            editContent.category = category
+            editContent.language = language
+            editContent.genre = genre
+            await editContent.save()
+            res.status(200).json(editContent)
+        }
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
 // get show controller
 exports.getShowController = async (req, res) => {
     const searchData = req.query.search
@@ -129,7 +161,7 @@ exports.getSimilarShows = async (req, res) => {
 }
 
 exports.updateShowRatingController = async (req, res) => {
-    const {showid} = req.body
+    const { showid } = req.body
     try {
         const ratings = await lists.find({ showid: showid }, { rating: 1 })
         if (!ratings.length) {
@@ -142,27 +174,27 @@ exports.updateShowRatingController = async (req, res) => {
         await shows.findByIdAndUpdate(showid, { score: avg, scoreCount: count })
         res.status(200).json(avg)
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 }
 
-exports.getPopularShowController = async(req,res) => {
-    try{
-        const popularShows = await shows.find().sort({listCount:-1}).limit(6)
+exports.getPopularShowController = async (req, res) => {
+    try {
+        const popularShows = await shows.find().sort({ listCount: -1 }).limit(6)
         res.status(200).json(popularShows)
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 }
 
-exports.getFeaturedShowController = async(req,res) => {
-    try{
-        const FeaturedShows = await shows.find({featured:true})
+exports.getFeaturedShowController = async (req, res) => {
+    try {
+        const FeaturedShows = await shows.find({ featured: true })
         res.status(200).json(FeaturedShows)
     }
-    catch(err){
+    catch (err) {
         res.status(500).json(err)
     }
 }
