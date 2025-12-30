@@ -1,5 +1,7 @@
 const shows = require("../models/showModel")
 const users = require("../models/userModel")
+const bcrypt = require("bcrypt")
+const saltRounds = 10
 
 exports.getUserController = async(req,res) => {
     try{
@@ -105,6 +107,39 @@ exports.unBanUserController = async(req,res) => {
         
     }
     catch(err){
+        res.status(500).json(err)
+    }
+}
+
+exports.getAdminController = async (req, res) => {
+    const email = req.payload
+    try {
+        const Admin = await users.findOne({email:email})        
+        res.status(200).json(Admin)
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+exports.editAdminController = async (req, res) => {    
+    const {adminDataAll,adminData} = req.body
+    const {username,password,cPassword} = adminData
+    try {
+        let hashedPassword
+        if(password == ""){
+            hashedPassword = adminDataAll.password
+        }
+        else{
+            hashedPassword = await bcrypt.hash(password, saltRounds)
+        }
+        if(password!=cPassword){
+            return res.status(403).json("Password does not Match")
+        }
+        const Admin = await users.findByIdAndUpdate(adminDataAll._id,{username:username,password:hashedPassword},{new:true})        
+        res.status(200).json(Admin)
+    }
+    catch (err) {
         res.status(500).json(err)
     }
 }
