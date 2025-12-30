@@ -51,7 +51,7 @@ exports.loginController = async (req, res) => {
                 // if (existingUser.otpVerified) {
                 const match = await bcrypt.compare(password, existingUser.password)
                 if (match) {
-                    const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
+                    const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile, administrator:existingUser.administrator }, process.env.secretkey)
                     return res.status(200).json({ existingUser, token })
                 }
                 else {
@@ -113,7 +113,7 @@ exports.googleLoginController = async (req, res) => {
                 res.status(401).json("This Account is Suspended!")
             }
             else {
-                const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile }, process.env.secretkey)
+                const token = jwt.sign({ userMail: existingUser.email, username: existingUser.username, profile: existingUser.profile, administrator:existingUser.administrator }, process.env.secretkey)
                 res.status(200).json({ existingUser, token })
             }
         }

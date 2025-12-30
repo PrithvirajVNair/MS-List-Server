@@ -182,12 +182,6 @@ route.delete("/delete-custom-list",jwtMiddleware,customListController.deleteCust
 
 // ..............................ADMIN..............................
 
-// get admin
-route.get("/get-admin",jwtMiddleware,adminController.getAdminController)
-
-// get admin
-route.put("/edit-admin",adminController.editAdminController)
-
 //add shows
 route.post("/add-shows",showController.addShowController)
 
